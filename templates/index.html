@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf1ef">
+  <meta name="description" content="Công cụ biên tập văn bản giúp bạn làm gọn câu, chỉnh dấu câu và đối chiếu bản nháp với bản đã sửa.">
+  <title>Biên tập văn bản — Viết rõ ý hơn</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <header class="topbar" id="dau-trang">
+    <div class="shell topbar-inner">
+      <a class="identity" href="#dau-trang" aria-label="Biên tập văn bản, về đầu trang">
+        <span class="identity-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Biên tập văn bản</span>
+      </a>
+      <nav class="nav-links" aria-label="Điều hướng chính">
+        <a href="#bien-tap">Công cụ</a>
+        <a href="#huong-dan">Hướng dẫn</a>
+        <a href="#vi-du">Ví dụ</a>
+        <a href="#cau-hoi">Câu hỏi</a>
+      </nav>
+      <span class="header-label">CÔNG CỤ VIẾT RÕ Ý</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell main-grid">
+      <aside class="intro" aria-labelledby="page-title">
+        <div class="section-code"><span class="code-line"></span> KHÔNG GIAN VIẾT / 01</div>
+        <h1 id="page-title">Bản nháp tốt hơn bắt đầu từ <span>một câu rõ ý.</span></h1>
+        <p class="intro-text">Dán đoạn viết, chọn giọng văn rồi xem bản chỉnh sửa ngay bên cạnh. Bạn đọc lại và quyết định câu nào sẽ dùng.</p>
+        <div class="intro-facts">
+          <div><strong>Không cần tài khoản</strong><span>Mở trang và bắt đầu viết.</span></div>
+          <div><strong>Không lưu trên máy chủ</strong><span>Lịch sử chỉ ở trong tab và mất khi tải lại.</span></div>
+        </div>
+        <a class="intro-link" href="#huong-dan">Xem cách sử dụng <span aria-hidden="true">↗</span></a>
+      </aside>
+
+      <section class="workspace" id="bien-tap" aria-labelledby="editor-title">
+        <div class="workspace-heading">
+          <div><span class="workspace-overline">TRÌNH BIÊN TẬP</span><h2 id="editor-title">Làm việc với bản nháp</h2></div>
+          <span class="workspace-status"><i aria-hidden="true"></i> Sẵn sàng</span>
+        </div>
+
+        <div class="editor-card">
+          <div class="editor-settings">
+            <div class="field-group field-tone">
+              <label for="tone-select">GIỌNG VĂN</label>
+              <div class="select-wrap">
+                <select id="tone-select">
+                  <option value="natural">Tự nhiên, gần gũi</option>
+                  <option value="concise">Ngắn gọn, trực tiếp</option>
+                  <option value="professional">Chuyên nghiệp, rõ ràng</option>
+                  <option value="academic">Học thuật, chính xác</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group field-mode">
+              <label for="mode-select">CHẾ ĐỘ</label>
+              <div class="select-wrap">
+                <select id="mode-select" aria-label="Chế độ biên tập">
+                  <option value="local">Cơ bản</option>
+                  <option value="deep" disabled>AI · chưa bật</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group field-level" id="level-group" hidden>
+              <label for="level-select">MỨC CHỈNH SỬA</label>
+              <div class="select-wrap">
+                <select id="level-select">
+                  <option value="light">Nhẹ</option>
+                  <option value="medium" selected>Vừa</option>
+                  <option value="strong">Mạnh</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <p id="mode-hint" class="mode-hint">Chế độ cơ bản dùng quy tắc có sẵn; một số đoạn có thể không thay đổi. AI chưa được bật trên máy chủ.</p>
+
+          <div class="editor-panels">
+            <div class="editor-panel input-panel">
+              <div class="panel-head"><span><i class="panel-dot input-dot" aria-hidden="true"></i> BẢN NHÁP</span><div class="panel-head-tools"><button class="text-button" id="import-button" type="button">Nhập tệp</button><button class="text-button" id="sample-button" type="button">Đoạn mẫu</button></div></div>
+              <input id="import-file" type="file" accept=".txt,.md,text/plain,text/markdown" hidden>
+              <label class="sr-only" for="input-text">Văn bản cần biên tập</label>
+              <textarea id="input-text" maxlength="12000" placeholder="Dán hoặc nhập văn bản vào đây...&#10;&#10;Ví dụ: một email, đoạn báo cáo hoặc phần mở đầu bạn muốn viết rõ hơn."></textarea>
+              <div class="panel-bottom"><span id="input-count">0 từ · 0 / 12.000 ký tự</span><button class="text-button" id="clear-button" type="button">Xóa</button></div>
+            </div>
+
+            <div class="editor-panel output-panel">
+              <div class="panel-head"><span><i class="panel-dot output-dot" aria-hidden="true"></i> BẢN ĐÃ BIÊN TẬP</span><span class="output-status" id="output-status">CHỜ BẢN NHÁP</span></div>
+              <div class="output-content" id="output-text" role="status" aria-live="polite"><div class="empty-state"><span class="empty-icon" aria-hidden="true">→</span><strong>Kết quả sẽ hiển thị ở đây</strong><span>Nhập văn bản rồi chọn “Biên tập bản nháp”.</span></div></div>
+              <label class="sr-only" for="output-editor">Chỉnh sửa bản kết quả</label>
+              <textarea id="output-editor" hidden></textarea>
+              <div class="panel-bottom output-actions"><span id="output-count">Chưa có kết quả</span><div><button class="text-button" id="edit-result-button" type="button" disabled>Sửa</button><button class="text-button" id="copy-button" type="button" disabled>Sao chép</button><button class="text-button" id="download-button" type="button" disabled>Tải TXT</button></div></div>
+            </div>
+          </div>
+
+          <div class="editor-actions">
+            <span>Phím tắt: Ctrl + Enter</span>
+            <button class="primary-button" id="rewrite-button" type="button">Biên tập bản nháp <span aria-hidden="true">→</span></button>
+          </div>
+          <div id="editor-message" class="editor-message" role="alert" hidden></div>
+        </div>
+
+        <div id="edit-notes" class="edit-notes" hidden>
+          <span class="edit-notes-title">CÁC CHỈNH SỬA</span>
+          <ul id="notes-list"></ul>
+        </div>
+        <div class="history-panel" id="history-panel" hidden>
+          <div class="history-heading"><div><strong>BẢN TRONG PHIÊN</strong><span>Tối đa 5 bản, mất khi tải lại trang.</span></div><button class="text-button" id="clear-history-button" type="button">Xóa lịch sử</button></div>
+          <ol id="history-list"></ol>
+        </div>
+        <p class="editor-disclaimer">Tệp TXT/Markdown được đọc trong trình duyệt. Ứng dụng không lưu bản nháp trên máy chủ; lịch sử chỉ nằm trong tab hiện tại. Khi chọn AI, văn bản được gửi tới API để xử lý. Hãy kiểm tra lại ý nghĩa, tên riêng và dữ kiện trước khi sử dụng.</p>
+      </section>
+    </div>
+
+    <section class="guide-section" id="huong-dan" aria-labelledby="guide-title">
+      <div class="shell guide-grid">
+        <div class="section-intro"><span class="section-code"><span class="code-line"></span> HƯỚNG DẪN / 02</span><h2 id="guide-title">Một quy trình ngắn,<br>đủ để bắt đầu.</h2><p>Trình biên tập giúp bạn xử lý bản nháp nhanh. Bạn vẫn là người chọn phiên bản cuối cùng.</p></div>
+        <ol class="steps-list">
+          <li><span>01</span><div><h3>Nhập bản nháp</h3><p>Dán văn bản hoặc nhập tệp TXT/Markdown vào ô bên trái.</p></div></li>
+          <li><span>02</span><div><h3>Chọn cách diễn đạt</h3><p>Chọn giọng văn. Nếu AI đã bật, chọn thêm mức chỉnh sửa nhẹ, vừa hoặc mạnh.</p></div></li>
+          <li><span>03</span><div><h3>Đối chiếu và dùng</h3><p>Sửa thêm trên bản kết quả, mở lại bản trong phiên, sao chép hoặc tải TXT.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="example-section shell" id="vi-du" aria-labelledby="example-title">
+      <div class="example-heading"><div><span class="section-code"><span class="code-line"></span> VÍ DỤ / 03</span><h2 id="example-title">Thay đổi nhỏ, câu rõ hơn.</h2></div><p>Ví dụ này được tạo bằng chế độ biên tập cơ bản với lựa chọn “Ngắn gọn, trực tiếp”.</p></div>
+      <div class="example-grid">
+        <div class="example-box"><span class="example-label">BẢN NHÁP</span><p>Trong bối cảnh hiện nay, việc đưa ra các quyết định dựa trên dữ liệu đóng vai trò quan trọng đối với sự phát triển của doanh nghiệp.</p></div>
+        <div class="example-box example-after"><span class="example-label">BẢN ĐÃ BIÊN TẬP</span><p>Hiện nay, quyết định dựa trên dữ liệu quan trọng với sự phát triển của doanh nghiệp.</p></div>
+      </div>
+    </section>
+
+    <section class="faq-section" id="cau-hoi" aria-labelledby="faq-title">
+      <div class="shell faq-grid">
+        <div class="section-intro"><span class="section-code"><span class="code-line"></span> THÔNG TIN / 04</span><h2 id="faq-title">Trước khi sử dụng</h2><p>Những điều cần biết về cách công cụ xử lý bản nháp.</p></div>
+        <div class="faq-list">
+          <details><summary>Chế độ cơ bản có mất phí không?<span aria-hidden="true">+</span></summary><p>Không. Bạn có thể sử dụng chế độ cơ bản ngay trên trang này mà không cần tài khoản.</p></details>
+          <details><summary>Bản nháp có được lưu lại không?<span aria-hidden="true">+</span></summary><p>Ứng dụng không ghi bản nháp lên máy chủ. Tối đa 5 bản đã biên tập chỉ được giữ trong bộ nhớ của tab hiện tại để bạn mở lại; tải lại hoặc đóng tab sẽ xóa lịch sử này.</p></details>
+          <details><summary>Khi nào có thể dùng biên tập AI?<span aria-hidden="true">+</span></summary><p>Chế độ AI được bật khi website có API key. Bạn có thể chọn mức nhẹ để sửa ít, mức vừa để làm câu mạch lạc hơn, hoặc mức mạnh để diễn đạt lại nhiều hơn. Nội dung sẽ được gửi tới nhà cung cấp AI để biên tập.</p></details>
+          <details><summary>Tôi có cần đọc lại kết quả không?<span aria-hidden="true">+</span></summary><p>Có. Hãy kiểm tra lại số liệu, tên riêng, trích dẫn và ý nghĩa của đoạn văn trước khi sử dụng.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell footer-inner"><span>Biên tập văn bản</span><span>Viết rõ ý hơn, theo cách của bạn.</span><span>© <span id="year">2026</span></span></div></footer>
+</body>
+</html>
